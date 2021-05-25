@@ -5,14 +5,26 @@
 import socket
 import sys
 
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('0.0.0.1', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
+
 if len(sys.argv) != 2:
-    print ("Agregar el puerto donde se va a ofrecer el servicio.")
+    print ("Agregar el puerto donde se va a ofrecer el servicio en el servidor.")
     sys.exit(0)
 
-IP = "localhost"
+IP = get_ip()  
 PUERTO = int(sys.argv[1])
 
-print ("\nServicio se va a configurar en el puerto: ", PUERTO, " ...")
+print ("\nServicio se va a configurar en el puerto: ", PUERTO, "en el servidor ", IP, "\n")
 
 socket_servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -23,7 +35,7 @@ socket_servidor.bind((IP, PUERTO))
 # El parametro indica el numero de conexiones entrantes que vamos a aceptar
 socket_servidor.listen(2)
 
-print ("Servicio configurado.\n")
+print ("Servicio configurado en puerto ", PUERTO, "en el servidor ", IP, "\n")
 
 try:
     while True:
@@ -35,15 +47,15 @@ try:
 
         while True:
             try:
-                recibido = socket_cliente.recv(1024)
-                print (str(direccion_cliente[0]) + " >> ", recibido)
+                recibido = socket_cliente.recv(1024).decode('utf-8')
+                print (direccion_cliente[0] + " >> ", recibido)
                 if recibido == "finalizar()":
                     print ("Cliente finalizo la conexion.")
                     print ("Cerrando la conexion con el cliente ...")
                     socket_cliente.close()
                     print ("Conexion con el cliente cerrado.")
                     break
-                respuesta_servidor = str(direccion_cliente[0]) + " envio: " + recibido
+                respuesta_servidor = direccion_cliente[0] + " envio: " + recibido
                 socket_cliente.send(respuesta_servidor.encode("utf-8"))
             except socket.error:
                 print ("Conexion terminada abruptamente por el cliente.")
