@@ -25,11 +25,11 @@ print ("\nConectado, escriba finalizar() para terminar la conección.\n")
 
 try:
     while True:
-        mensaje = str(raw_input("Yo >> "))
+        mensaje = str(input("Yo >> "))
         socket_cliente.send(mensaje.encode("utf-8"))
         if mensaje == "finalizar()":
             break
-        recibido = socket_cliente.recv(1024)
+        recibido = socket_cliente.recv(1024).decode('utf-8')
         print ("Servidor >> " + recibido)
 
 except socket.error:
