@@ -18,7 +18,7 @@ def get_ip():
     return IP
 
 if len(sys.argv) != 2:
-    print ("Agregar el puerto donde se va a ofrecer el servicio en el servidor.")
+    print ("Agregar el puerto donde se va a ofrecer el servicio.")
     sys.exit(0)
 
 IP = get_ip()  
