@@ -41,3 +41,4 @@ finally:
     print ("Terminando conexion con el servidor ...")
     socket_cliente.close()
     print ("Conexion con el servidor terminado.")
+    #lkdsjgkldfjglkj
